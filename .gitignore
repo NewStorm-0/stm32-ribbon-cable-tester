@@ -1,0 +1,51 @@
+# Local-only documents and vendor manuals
+/软件需求.md
+/manual/
+
+# Build directories
+/build/
+/code/build/
+**/cmake-build-*/
+**/out/
+
+# CMake generated files
+**/CMakeFiles/
+**/CMakeCache.txt
+**/cmake_install.cmake
+**/compile_commands.json
+CMakeUserPresets.json
+
+# Compiler and firmware outputs
+*.o
+*.obj
+*.d
+*.a
+*.elf
+*.hex
+*.bin
+*.map
+*.lst
+*.list
+*.su
+
+# STM32Cube local metadata
+**/.mxproject
+**/.settings/
+**/mx.scratch/
+
+# IDE local state
+**/.idea/
+**/.vs/
+
+# Editor temporary files
+*.swp
+*.swo
+*~
+*.bak
+*.tmp
+
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
