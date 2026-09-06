@@ -60,3 +60,10 @@ cmake --build --preset Debug
 ## 项目状态
 
 项目正在开发中。目前已完成硬件设计及 STM32CubeMX 基础工程，检测、显示和蜂鸣功能尚待实现与实物验证。
+
+## 许可证
+
+Copyright © 2026 NewStorm
+
+- 硬件设计文件（`DT 2026.eprj2`、`SCH_YY.json`、`PCB_YY.json` 和 `BOM_YY.csv`）采用 [CERN-OHL-S-2.0](LICENSE) 强互惠许可证。
+- NewStorm 编写的固件代码采用 [MIT License](code/LICENSE)。STM32Cube HAL、CMSIS 及其他带有独立版权或许可证声明的第三方文件仍适用其各自许可证。
