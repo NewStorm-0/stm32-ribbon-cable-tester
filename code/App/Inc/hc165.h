@@ -3,9 +3,6 @@
 
 #include <stdint.h>
 
-#define HC165_CHIP_COUNT  7U
-#define HC165_BIT_COUNT   (HC165_CHIP_COUNT * 8U)
-
 /*
  * 读取 7 片级联 74HC165 的原始 56 位串行数据。
  *

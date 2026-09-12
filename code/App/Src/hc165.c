@@ -1,6 +1,9 @@
 #include "hc165.h"
 #include "main.h"
 
+#define HC165_CHIP_COUNT  7U
+#define HC165_BIT_COUNT   (HC165_CHIP_COUNT * 8U)
+
 /*
  * 读取流程：
  * 1. 拉低 PL#，并行装载各输入状态；
