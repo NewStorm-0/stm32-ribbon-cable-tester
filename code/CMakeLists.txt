@@ -53,7 +53,9 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
+    App/Src/delay.c
     App/Src/hc165.c
+    App/Src/tm1637.c
 )
 
 # Add include paths
