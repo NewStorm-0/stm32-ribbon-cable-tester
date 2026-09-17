@@ -21,7 +21,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "tm1637.h"
+#include "hc165.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
