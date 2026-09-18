@@ -48,6 +48,7 @@
 #define TM1637_DISPLAY_OFF 0x00U
 
 void TM1637_SetChar(uint8_t left, uint8_t right);
+void TM1637_SetNumber(uint8_t number);
 void TM1637_SetBrightness(uint8_t brightness, uint8_t on);
 
 #endif /* TM1637_H */

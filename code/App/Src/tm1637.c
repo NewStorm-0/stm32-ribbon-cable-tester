@@ -6,6 +6,7 @@ static inline void Set_AutoIncrease_DataCommand(void);
 static inline void Set_AddressCommand(uint8_t address);
 static inline void Set_DisplayData(uint8_t left, uint8_t right);
 static inline void Set_DisplayControl(uint8_t brightness, uint8_t on);
+static uint8_t DigitToSegment(uint8_t digit);
 
 /**
  * @brief Set the character to be displayed on the TM1637 display
@@ -20,6 +21,24 @@ void TM1637_SetChar(uint8_t left, uint8_t right)
 }
 
 /**
+ * @brief Display a two-digit decimal number
+ * @param number The number to display, in the range 0 to 99
+ */
+void TM1637_SetNumber(uint8_t number)
+{
+    if (number > 99U)
+    {
+        TM1637_SetChar(TM1637_SEG_MINUS, TM1637_SEG_MINUS);
+        return;
+    }
+
+    uint8_t left_digit = number / 10U;
+    uint8_t right_digit = number % 10U;
+
+    TM1637_SetChar(DigitToSegment(left_digit), DigitToSegment(right_digit));
+}
+
+/**
  * @brief Set the brightness of the TM1637 display
  * @param brightness The brightness level. This parameter can be a value of @ref TM1637_Brightness
  * @param on The display on/off state. This parameter can be a value of @ref TM1637_DisplayState
@@ -27,6 +46,24 @@ void TM1637_SetChar(uint8_t left, uint8_t right)
 void TM1637_SetBrightness(uint8_t brightness, uint8_t on)
 {
     Set_DisplayControl(brightness, on);
+}
+
+static uint8_t DigitToSegment(uint8_t digit)
+{
+    static const uint8_t segment_table[10] = {
+        TM1637_SEG_0,
+        TM1637_SEG_1,
+        TM1637_SEG_2,
+        TM1637_SEG_3,
+        TM1637_SEG_4,
+        TM1637_SEG_5,
+        TM1637_SEG_6,
+        TM1637_SEG_7,
+        TM1637_SEG_8,
+        TM1637_SEG_9,
+    };
+
+    return segment_table[digit];
 }
 
 static inline void TM1637_CLK_HIGH(void)
