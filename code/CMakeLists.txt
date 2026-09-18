@@ -57,6 +57,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     App/Src/delay.c
     App/Src/hc165.c
     App/Src/tm1637.c
+    App/Src/buzzer.c
 )
 
 # Add include paths
