@@ -24,6 +24,7 @@
 #include "tm1637.h"
 #include "hc165.h"
 #include "cable_detector.h"
+#include "buzzer.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -33,7 +34,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define DETECT_ACTIVE_DEBOUNCE_MS  8U
+#define DETECT_RELEASE_DEBOUNCE_MS 25U
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -44,7 +46,17 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+static CableDetectResult stable_result = {
+  .status = CABLE_DETECT_NONE,
+  .channel = 0U,
+  .active_count = 0U
+};
+static CableDetectResult candidate_result = {
+  .status = CABLE_DETECT_NONE,
+  .channel = 0U,
+  .active_count = 0U
+};
+static uint32_t candidate_since = 0U;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -56,7 +68,24 @@ static void MX_GPIO_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+static CableDetectResult DebounceResult(CableDetectResult new_result)
+{
+  if (new_result.status != candidate_result.status || new_result.channel != candidate_result.channel)
+  {
+    candidate_result = new_result;
+    candidate_since = HAL_GetTick();
+  }
+  else
+  {
+    uint32_t elapsed = HAL_GetTick() - candidate_since;
+    uint32_t debounce_time = (candidate_result.status == CABLE_DETECT_NONE) ? DETECT_RELEASE_DEBOUNCE_MS : DETECT_ACTIVE_DEBOUNCE_MS;
+    if (elapsed >= debounce_time)
+    {
+        stable_result = candidate_result;
+    }
+  }
+  return stable_result;
+}
 /* USER CODE END 0 */
 
 /**
@@ -90,6 +119,7 @@ int main(void)
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
   TM1637_SetBrightness(TM1637_DUTY_14_16, TM1637_DISPLAY_ON);
+  candidate_since = HAL_GetTick();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -99,17 +129,21 @@ int main(void)
     /* USER CODE END WHILE */
     /* USER CODE BEGIN 3 */
     CableDetectResult result = CableDetector_Decode(HC165_ReadRaw());
+    result = DebounceResult(result);
     if (result.status == CABLE_DETECT_SINGLE)
     {
-        TM1637_SetNumber(result.channel);
+      TM1637_SetNumber(result.channel);
+      Buzzer_On();
     }
     else if (result.status == CABLE_DETECT_MULTIPLE)
     {
-        TM1637_SetChar(TM1637_SEG_E, TM1637_SEG_E);
+      TM1637_SetChar(TM1637_SEG_E, TM1637_SEG_E);
+      Buzzer_Off();
     }
     else
     {
-        TM1637_SetChar(TM1637_SEG_MINUS, TM1637_SEG_MINUS);
+      TM1637_SetChar(TM1637_SEG_MINUS, TM1637_SEG_MINUS);
+      Buzzer_Off();
     }
   }
   /* USER CODE END 3 */
