@@ -23,6 +23,7 @@
 /* USER CODE BEGIN Includes */
 #include "tm1637.h"
 #include "hc165.h"
+#include "cable_detector.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -88,7 +89,7 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-
+  TM1637_SetBrightness(TM1637_DUTY_14_16, TM1637_DISPLAY_ON);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -96,8 +97,20 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
     /* USER CODE BEGIN 3 */
+    CableDetectResult result = CableDetector_Decode(HC165_ReadRaw());
+    if (result.status == CABLE_DETECT_SINGLE)
+    {
+        TM1637_SetNumber(result.channel);
+    }
+    else if (result.status == CABLE_DETECT_MULTIPLE)
+    {
+        TM1637_SetChar(TM1637_SEG_E, TM1637_SEG_E);
+    }
+    else
+    {
+        TM1637_SetChar(TM1637_SEG_MINUS, TM1637_SEG_MINUS);
+    }
   }
   /* USER CODE END 3 */
 }
